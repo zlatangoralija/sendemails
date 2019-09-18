@@ -5,13 +5,13 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "Omnitask\\SendEmailsRepository\\": "src/"
+            "Omnitask\\SendEmailRepository\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Omnitask\\SendEmailsRepository\\Providers\\SendEmailServiceProvider"
+                "Omnitask\\SendEmailRepository\\Providers\\SendEmailServiceProvider"
             ]
         }
     }

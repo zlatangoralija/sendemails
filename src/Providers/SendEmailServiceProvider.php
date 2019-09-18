@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Omnitask\SendEmailRepository\Providers;
+namespace Omnitask\SendEmailRepository\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Omnitask\SendEmailRepository\Interfaces\SendEmailInterface;

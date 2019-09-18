@@ -14,5 +14,11 @@
                 "Omnitask\\SendEmailsRepository\\Providers\\SendEmailServiceProvider"
             ]
         }
-    }
+    },
+    "repositories":[
+        {
+            "type": "vcs",
+            "url": "http://git.omnitask.ba/zlatan/sendemails.git"
+        }
+    ]
 }

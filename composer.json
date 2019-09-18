@@ -1,0 +1,18 @@
+{
+    "name": "omnitask/send-emails",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Omnitask\\SendEmailRepository\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Omnitask\\SendEmailsRepository\\Providers\\SendEmailServiceProvider"
+            ]
+        }
+    }
+}

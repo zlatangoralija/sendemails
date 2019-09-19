@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace Omnitask\SendEmailRepository\Jobs;
 use Log;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;

@@ -71,6 +71,7 @@ class SendEmail implements ShouldQueue
                 'model_name' => serialize($this->modelClassName), //naziv modela klase
                 'exception' => $e->getMessage(),
             ]);
+            Log::info($e->getMessage());
         }
     }
 }

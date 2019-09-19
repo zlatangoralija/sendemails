@@ -38,7 +38,7 @@ php artisan cache:clear
 php artisan config:cache
  ```
 
- ###NOTE 2
+###NOTE 2
 You may also need to manually delete ```bootstrap/cache``` if you get an exception from composer dump autolaod: 
 ```
 Script @php artisan package:discover handling the post-autoload-dump event returned with error code 255

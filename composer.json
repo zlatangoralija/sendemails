@@ -2,6 +2,17 @@
     "name": "omnitask/send-emails",
     "license": "MIT",
     "minimum-stability": "stable",
+    "type": "package",
+    "authors": [
+        {
+            "name": "Zlatan Goralija",
+            "email": "goralijazlatan@gmail.com"
+        },
+        {
+            "name": "Armin Alagić",
+            "email": "armin@omnitask.ba"
+        }
+    ],
     "require": {},
     "autoload": {
         "psr-4": {

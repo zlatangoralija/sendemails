@@ -5,7 +5,30 @@ SendEmail Repository has 3 main functions:
  2. Get all failed emails from database
  3. Resend single or all failed emails
  
- Necessary steps to use this repository: <br>
+##Package installation
+In order to install this package to your project, inside your package.json file, add follwing:
+
+```
+  "require": {
+    "omnitask/send-emails": "dev-master"
+  },
+```
+```
+  "repositories":[
+    {
+      "type": "vcs",
+      "url": "git@git.omnitask.ba:zlatan/sendemails.git",
+      "options": {
+        "ssh2": {
+          "username": "composer",
+          "pubkey_file": "/home/composer/.ssh/id_rsa.pub",
+          "privkey_file": "/home/composer/.ssh/id_rsa"
+        }
+      }
+    }
+  ]
+ ```
+ After installation, necessary steps to use this repository are following: <br>
  
  Run migrations:
  ```

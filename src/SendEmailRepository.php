@@ -2,7 +2,6 @@
 
 namespace Omnitask\SendEmailRepository;
 
-use App\Jobs\SendEmail;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -11,6 +10,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Omnitask\SendEmailRepository\Interfaces\SendEmailInterface;
+use Omnitask\SendEmailRepository\Jobs\SendEmail;
 
 class SendEmailRepository implements SendEmailInterface
 {

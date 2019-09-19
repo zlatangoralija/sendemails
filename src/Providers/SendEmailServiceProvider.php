@@ -35,6 +35,10 @@ class SendEmailServiceProvider extends ServiceProvider
             require __DIR__.'/../routes/web.php';
         }
 
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/sendemails.php',
+            'sendemails'
+        );
     }
 
 }

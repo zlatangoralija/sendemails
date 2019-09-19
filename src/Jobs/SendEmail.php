@@ -50,8 +50,8 @@ class SendEmail implements ShouldQueue
     {
         try{
           Redis::throttle('SendEmail')
-            ->allow(config("sendemails.send_max_emails"))
-                ->every(config("sendemails.send_emails_every_n_seconds"))
+            ->allow(1)
+                ->every(10)
                 ->then(function () {
                     Mail::to($this->user)->send($this->mailable);
                     if($this->user->id){
@@ -59,7 +59,7 @@ class SendEmail implements ShouldQueue
                     }
                     Log::info('SendEmail  email: '.$this->user->email);
                 }, function () {
-                    return $this->release(config("sendemails.release_failed_emails_back_to_queue_delay"));
+                    return $this->release(12);
                 });
         }catch (\Exception $e){
             ResendEmail::updateOrCreate([

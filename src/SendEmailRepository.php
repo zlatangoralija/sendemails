@@ -5,6 +5,7 @@ namespace Omnitask\SendEmailRepository;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Mailable;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Redirect;
@@ -25,6 +26,7 @@ class SendEmailRepository implements SendEmailInterface
         return $failedEmails->paginate(20);
     }
 
+//    TODO: Improve this function if future releases, or delete it completely and use sendEmailByMailable() instead
     /**
      * Send email through SendEmail job.
      *
@@ -61,6 +63,28 @@ class SendEmailRepository implements SendEmailInterface
         }
     }
 
+
+    /**
+     * Send email by already built mailable class. Function checks if $users variable is a collection or single object instance.
+     * If variable is collection, we loop throuhg it and send Mailable to each users, else we send it to a single user.
+     *
+     * @param $users User
+     * @param $mailable Mailable
+     * @param $mailableModel Model
+     */
+    public function sendEmailByMailable($users, $mailable, $mailableModel = null)
+    {
+        if($users){
+            if($users instanceof Collection) {
+                foreach ($users as $user){
+                    $this->validateDataAndSendEmail($user, $mailable, $mailableModel);
+                }
+            }else{
+                $this->validateDataAndSendEmail($users, $mailable, $mailableModel);
+            }
+        }
+    }
+
     /**
      * Resend failed emails. Two options:
      * 1. Resend email only for selected user,
@@ -89,5 +113,69 @@ class SendEmailRepository implements SendEmailInterface
             $this->sendEmail($recievingUsers, $mailableClass, unserialize($model));
         }
         return redirect()->back()->with('success', 'Pokušaj ponovnog slanja e-maila.');
+    }
+
+    /**
+     * Validation of parameters that are being sent to SendEmail job:
+     *
+     * 1. Users email validation
+     * 2. Mailable model validation
+     *
+     * @param $users User
+     * @param $mailable Mailable
+     * @param $mailableModel Model
+     */
+
+    public function validateDataAndSendEmail($users, $mailable, $mailableModel = null){
+        $this->validateEmail($users);
+        $mailableModelId = $this->validateMailableModel($mailableModel);
+        $this->initiateSendEmailJob($users, $mailable, $mailableModel, $mailableModelId);
+    }
+
+    /**
+     * Validation of users email.
+     *
+     * @param $users User
+     */
+
+    public function validateEmail($user){
+        $validator = Validator::make(['email' => $user->email],
+            [ 'email' => 'email']);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+    }
+
+    /**
+     * Validation of Object that is being sent through Mailable Class. We do this in case SendEmailJob fails,
+     * so we can save the Model id.
+     *
+     * @param $mailableModel Model
+     */
+
+    public function validateMailableModel($mailableModel){
+        if($mailableModel && isset($mailableModel->id)){
+            $mailableModelId = $mailableModel->id;
+        }else{
+            $mailableModelId  = 'undefined';
+        }
+
+        return $mailableModelId;
+    }
+
+    /**
+     * Initate SendEmail job that sents out all the emails and handles the redis logic.
+     *
+     * @param $users User
+     * @param $mailable Mailable
+     * @param $mailableModel Model
+     * @param $mailableModelId integer
+     */
+
+    public function initiateSendEmailJob($users, $mailable, $mailableModel, $mailableModelId ){
+        dispatch(new SendEmail($users, $mailable, $mailableModel, $mailableModelId));
     }
 }

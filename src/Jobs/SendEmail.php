@@ -18,7 +18,6 @@ class SendEmail implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $user;
-    protected $subject;
     protected $mailable;
     protected $modelClassName;
     protected $modelId;
@@ -27,15 +26,13 @@ class SendEmail implements ShouldQueue
      * Create a new job instance.
      *
      * @param $user User
-     * @param $subject string
      * @param $mailable Mailable
      * @param $modelClassName string
      * @param $modelId integer
      */
-    public function __construct($user, $subject, $mailable, $modelClassName, $modelId)
+    public function __construct($user, $mailable, $modelClassName, $modelId)
     {
         $this->user = $user;
-        $this->subject = $subject;
         $this->mailable = $mailable;
         $this->modelClassName = $modelClassName;
         $this->modelId = $modelId;
@@ -49,8 +46,8 @@ class SendEmail implements ShouldQueue
     public function handle()
     {
         try{
-          Redis::throttle('SendEmail')
-            ->allow(config("sendemails.send_max_emails"))
+            Redis::throttle('SendEmail')
+                ->allow(config("sendemails.send_max_emails"))
                 ->every(config("sendemails.send_emails_every_n_seconds"))
                 ->then(function () {
                     Mail::to($this->user)->send($this->mailable);
@@ -65,10 +62,10 @@ class SendEmail implements ShouldQueue
             ResendEmail::updateOrCreate([
                 'id' => $this->modelId
             ],[
-                'user_id' => $this->user->id, //id usera
-                'mailable_class' => get_class($this->mailable), //Email klasa
-                'model_id' => $this->modelId, //Id emaila iz modela
-                'model_name' => serialize($this->modelClassName), //naziv modela klase
+                'user_id' => $this->user->id,
+                'mailable_class' => get_class($this->mailable),
+                'model_id' => $this->modelId,
+                'model_name' => serialize($this->modelClassName),
                 'exception' => $e->getMessage(),
             ]);
             Log::info($e->getMessage());

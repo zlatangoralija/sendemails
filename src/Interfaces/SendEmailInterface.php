@@ -6,7 +6,15 @@ use Illuminate\Http\Request;
 
 interface SendEmailInterface
 {
-    public function sendEmail($recievingUsers, $mailableClass, $model);
+    public static function getAllFailedEmails();
+
+    public static function getFailedEmailsByModelName($modelName);
+
+    public static function getFailedEmailByModelId($modelName, $modelId);
+
+    public static function getMailableClassName($mailable);
+
+    public function buildModelInstance($modelName, $modelId);
 
     public function sendEmailByMailable($users, $mailable, $model);
 
@@ -16,7 +24,9 @@ interface SendEmailInterface
 
     public function validateMailableModel($mailableModel);
 
-    public function getFailedEmails(Request $request);
+    public function initiateSendEmailJob($users, $mailable, $mailableModel, $mailableModelId, $failedEmailId);
 
-    public function resendEmail(Request $request);
+    public function resendEmailByMailable($failedEmails);
+
+    public function rebuildAndResendMailable($failedEmail);
 }

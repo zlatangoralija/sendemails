@@ -21,6 +21,7 @@ class SendEmail implements ShouldQueue
     protected $mailable;
     protected $modelClassName;
     protected $modelId;
+    protected $failedEmailId;
 
     /**
      * Create a new job instance.
@@ -29,13 +30,15 @@ class SendEmail implements ShouldQueue
      * @param $mailable Mailable
      * @param $modelClassName string
      * @param $modelId integer
+     * @param $failedEmailId integer
      */
-    public function __construct($user, $mailable, $modelClassName, $modelId)
+    public function __construct($user, $mailable, $modelClassName = null, $modelId = null, $failedEmailId = null)
     {
         $this->user = $user;
         $this->mailable = $mailable;
         $this->modelClassName = $modelClassName;
         $this->modelId = $modelId;
+        $this->failedEmailId = $failedEmailId;
     }
 
     /**
@@ -51,24 +54,24 @@ class SendEmail implements ShouldQueue
                 ->every(config("sendemails.send_emails_every_n_seconds"))
                 ->then(function () {
                     Mail::to($this->user)->send($this->mailable);
-                    if($this->user->id){
-                        ResendEmail::where('user_id', $this->user->id)->delete();
+                    if($this->failedEmailId){
+                        ResendEmail::where('id', $this->failedEmailId)->delete();
                     }
-                    Log::info('SendEmail  email: '.$this->user->email);
+                    Log::info('Omnitask\SendEmail sending email to: '.$this->user->email);
                 }, function () {
                     return $this->release(config("sendemails.release_failed_emails_back_to_queue_delay"));
                 });
         }catch (\Exception $e){
             ResendEmail::updateOrCreate([
-                'id' => $this->modelId
+                'id' => $this->failedEmailId
             ],[
                 'user_id' => $this->user->id,
-                'mailable_class' => get_class($this->mailable),
-                'model_id' => $this->modelId,
-                'model_name' => serialize($this->modelClassName),
+                'mailable_class' => serialize($this->mailable),
+                'model_id' => $this->modelId ?: null,
+                'model_name' => $this->modelClassName ? get_class($this->modelClassName) : null,
                 'exception' => $e->getMessage(),
             ]);
-            Log::info($e->getMessage());
+            Log::info('Omnitask\SendEmail failed to send email. Exception: ' . $e->getMessage());
         }
     }
 }

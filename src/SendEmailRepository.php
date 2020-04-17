@@ -101,12 +101,13 @@ class SendEmailRepository implements SendEmailInterface
      * @param $users User
      * @param $mailable Mailable
      * @param $mailableModel Model
+     * @param $failedEmailId integer
      */
 
-    public function validateDataAndSendEmail($users, $mailable, $mailableModel = null){
+    public function validateDataAndSendEmail($users, $mailable, $mailableModel = null, $failedEmailId = null){
         $this->validateEmail($users);
         $mailableModelId = $this->validateMailableModel($mailableModel);
-        $this->initiateSendEmailJob($users, $mailable, $mailableModel, $mailableModelId);
+        $this->initiateSendEmailJob($users, $mailable, $mailableModel, $mailableModelId, $failedEmailId);
     }
 
     /**
@@ -186,6 +187,7 @@ class SendEmailRepository implements SendEmailInterface
         $user = User::where('id', $failedEmail->user_id)->first();
         $mailableModel = $failedEmail->model_name ? $this->buildModelInstance($failedEmail->model_name, $failedEmail->model_id) : null;
         $mailable = unserialize($failedEmail->mailable_class);
-        $this->validateDataAndSendEmail($user, $mailable, $mailableModel);
+        $failedEmailId = $failedEmail->id;
+        $this->validateDataAndSendEmail($user, $mailable, $mailableModel, $failedEmailId);
     }
 }

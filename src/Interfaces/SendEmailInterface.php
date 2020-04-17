@@ -2,8 +2,6 @@
 
 namespace Omnitask\SendEmailRepository\Interfaces;
 
-use Illuminate\Http\Request;
-
 interface SendEmailInterface
 {
     public static function getAllFailedEmails();
@@ -18,13 +16,13 @@ interface SendEmailInterface
 
     public function sendEmailByMailable($users, $mailable, $model);
 
-    public function validateDataAndSendEmail($users, $mailable, $mailableModel = null);
+    public function validateDataAndSendEmail($users, $mailable, $mailableModel = null, $failedEmailId = null);
 
     public function validateEmail($user);
 
     public function validateMailableModel($mailableModel);
 
-    public function initiateSendEmailJob($users, $mailable, $mailableModel, $mailableModelId, $failedEmailId);
+    public function initiateSendEmailJob($users, $mailable, $mailableModel, $mailableModelId, $failedEmailId = null);
 
     public function resendEmailByMailable($failedEmails);
 

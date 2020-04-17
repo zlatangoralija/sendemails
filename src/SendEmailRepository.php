@@ -152,7 +152,7 @@ class SendEmailRepository implements SendEmailInterface
      * @param $mailableModelId integer
      * @param $failedEmailId integer
      */
-    public function initiateSendEmailJob($users, $mailable, $mailableModel, $mailableModelId, $failedEmailId){
+    public function initiateSendEmailJob($users, $mailable, $mailableModel, $mailableModelId, $failedEmailId = null){
         dispatch(new SendEmail($users, $mailable, $mailableModel, $mailableModelId, $failedEmailId));
     }
 

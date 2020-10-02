@@ -3,6 +3,7 @@
     "license": "MIT",
     "minimum-stability": "stable",
     "type": "package",
+    "description": "Redis throttling for sending emails",
     "authors": [
         {
             "name": "Zlatan Goralija",

@@ -176,6 +176,6 @@ class SendEmailRepository implements SendEmailInterface
      */
 
     public function initiateSendEmailJob($users, $mailable, $mailableModel, $mailableModelId ){
-        dispatch(new SendEmail($users, $mailable, $mailableModel, $mailableModelId));
+        dispatch(new SendEmail($users, $mailable, $mailableModel, $mailableModelId))->onQueue(config("sendemails.job_queue");
     }
 }

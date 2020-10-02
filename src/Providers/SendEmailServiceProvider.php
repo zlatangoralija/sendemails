@@ -20,6 +20,11 @@ class SendEmailServiceProvider extends ServiceProvider
             SendEmailInterface::class,
             SendEmailRepository::class
         );
+
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/sendemails.php',
+            'sendemails'
+        );
     }
 
     /**
@@ -34,11 +39,6 @@ class SendEmailServiceProvider extends ServiceProvider
         if (! $this->app->routesAreCached()) {
             require __DIR__.'/../routes/web.php';
         }
-
-        $this->mergeConfigFrom(
-            __DIR__ . '/../config/sendemails.php',
-            'sendemails'
-        );
 
         $this->registerPublishing();
     }

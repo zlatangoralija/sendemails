@@ -17,6 +17,13 @@ class SendEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * The number of seconds the job can run before timing out.
+     *
+     * @var int
+     */
+    public $timeout;
+
     protected $user;
     protected $mailable;
     protected $modelClassName;
@@ -36,6 +43,7 @@ class SendEmail implements ShouldQueue
         $this->mailable = $mailable;
         $this->modelClassName = $modelClassName;
         $this->modelId = $modelId;
+        $this->timeout = (int)config('sendemails.job_timeout_value');
     }
 
     /**

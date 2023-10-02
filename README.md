@@ -1,4 +1,4 @@
-##Omnitask\SendEmails repository
+## Omnitask\SendEmails repository
 
 SendEmail Repository has 4 main functions: 
  1. Send all emails through single SendEmail job

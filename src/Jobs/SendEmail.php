@@ -23,7 +23,6 @@ class SendEmail implements ShouldQueue
      * @var int
      */
     public $timeout;
-
     protected $user;
     protected $mailable;
     protected $modelClassName;
@@ -76,6 +75,7 @@ class SendEmail implements ShouldQueue
                 'model_name' => serialize($this->modelClassName),
                 'exception' => $e->getMessage(),
             ]);
+            
             Log::info($e->getMessage());
         }
     }

@@ -26,7 +26,6 @@ class SendEmailRepository implements SendEmailInterface
         return $failedEmails->paginate(20);
     }
 
-//    TODO: Improve this function if future releases, or delete it completely and use sendEmailByMailable() instead
     /**
      * Send email through SendEmail job.
      *
@@ -38,9 +37,7 @@ class SendEmailRepository implements SendEmailInterface
 
     public function sendEmail($recievingUsers, $mailableClass, $model = null)
     {
-        //prepare mailable
         foreach ($recievingUsers as $user){
-            //Check if email is valid
             $validator = Validator::make(['email' => $user->email],
                 [ 'email' => 'email']);
 
@@ -50,8 +47,6 @@ class SendEmailRepository implements SendEmailInterface
                     ->withInput();
             }
 
-
-            //izrendaj mailable (provjeriti da li je model klasa i da li ima id)
             if($model && isset($model->id)){
                 $modelId = $model->id;
             }else{
@@ -99,8 +94,7 @@ class SendEmailRepository implements SendEmailInterface
         if($request->filled('failed_email_id')) {
             //Send email to single user
             $failedEmails = ResendEmail::where('id', $request->input('failed_email_id'))->get();
-        }
-        else{
+        }else{
             //Send emails to all users with matching model_id
             $failedEmails = ResendEmail::where('model_id', $request->model_id)->get();
         }
